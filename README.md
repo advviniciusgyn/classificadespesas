@@ -69,6 +69,8 @@ Para usar a funcionalidade de IA (Google Gemini), você precisa configurar uma c
    GEMINI_API_KEY = "sua-chave-api-aqui"
    ```
 
+**Importante:** Por motivos de segurança, nunca inclua sua chave de API diretamente no código ou em arquivos que serão enviados para repositórios públicos. Sempre use variáveis de ambiente ou o sistema de segredos do Streamlit Cloud.
+
 ## Formato do Arquivo de Categorias
 
 O arquivo de categorias deve ser um CSV ou Excel com duas colunas:

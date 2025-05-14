@@ -15,5 +15,4 @@ ENABLE_AI_FALLBACK = True  # usar IA como fallback para categorias não identifi
 
 # Configurações da API do Google Gemini
 # No Streamlit Cloud, use st.secrets["GEMINI_API_KEY"] para acessar a chave da API
-os.environ["GEMINI_API_KEY"] = "AIzaSyBIUp4BHpWcnUsL2BafAE42bGNv-lyMvq4"
-GEMINI_API_KEY = st.secrets.get("GEMINI_API_KEY", "AIzaSyBIUp4BHpWcnUsL2BafAE42bGNv-lyMvq4") if "GEMINI_API_KEY" in st.secrets else os.environ.get("GEMINI_API_KEY", "AIzaSyBIUp4BHpWcnUsL2BafAE42bGNv-lyMvq4")
+GEMINI_API_KEY = st.secrets.get("GEMINI_API_KEY", "") if "GEMINI_API_KEY" in st.secrets else os.environ.get("GEMINI_API_KEY", "")
