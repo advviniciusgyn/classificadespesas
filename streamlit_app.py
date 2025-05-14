@@ -2,9 +2,22 @@
 Arquivo principal para deploy no Streamlit Cloud.
 Este arquivo contém o código da aplicação principal.
 """
+import streamlit as st
+
+# Configurações do Streamlit
+ST_PAGE_TITLE = "Categorizador de Despesas"
+ST_PAGE_ICON = "💰"
+
+# IMPORTANTE: st.set_page_config deve ser a primeira chamada do Streamlit
+st.set_page_config(
+    page_title=ST_PAGE_TITLE,
+    page_icon=ST_PAGE_ICON,
+    layout="wide"
+)
+
+# Importações restantes
 import os
 import sys
-import streamlit as st
 import pandas as pd
 import numpy as np
 import logging
@@ -21,17 +34,6 @@ import google.generativeai as genai
 from rapidfuzz import fuzz, process
 import unidecode
 import json
-
-# Configurações do Streamlit
-ST_PAGE_TITLE = "Categorizador de Despesas"
-ST_PAGE_ICON = "💰"
-
-# Configuração da página
-st.set_page_config(
-    page_title=ST_PAGE_TITLE,
-    page_icon=ST_PAGE_ICON,
-    layout="wide"
-)
 
 # Configuração de logging
 logging.basicConfig(level=logging.INFO)

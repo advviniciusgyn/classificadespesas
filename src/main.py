@@ -32,12 +32,8 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Configuração da página Streamlit
-st.set_page_config(
-    page_title=STREAMLIT_PAGE_TITLE,
-    page_icon=STREAMLIT_PAGE_ICON,
-    layout="wide"
-)
+# A configuração da página Streamlit foi movida para streamlit_app.py
+# para garantir que seja a primeira chamada do Streamlit
 
 def main():
     """Função principal do aplicativo."""
