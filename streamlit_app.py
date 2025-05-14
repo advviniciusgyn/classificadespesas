@@ -1,14 +1,60 @@
 """
 Arquivo principal para deploy no Streamlit Cloud.
-Este arquivo importa e executa a aplicação principal do projeto.
+Este arquivo contém o código da aplicação principal.
 """
 import os
 import sys
+import streamlit as st
+import pandas as pd
+import numpy as np
+import logging
+import tempfile
+from pathlib import Path
+import matplotlib.pyplot as plt
+import seaborn as sns
+import io
+import pdfplumber
+from datetime import datetime
+import re
+from typing import List, Dict, Any, Optional, Tuple
+import google.generativeai as genai
+from rapidfuzz import fuzz, process
+import unidecode
+import json
 
-# Adiciona o diretório src ao path do Python
-sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
+# Configurações do Streamlit
+ST_PAGE_TITLE = "Categorizador de Despesas"
+ST_PAGE_ICON = "💰"
 
-# Importa a função main do arquivo main.py
+# Configuração da página
+st.set_page_config(
+    page_title=ST_PAGE_TITLE,
+    page_icon=ST_PAGE_ICON,
+    layout="wide"
+)
+
+# Configuração de logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Configurações da API do Google Gemini
+GEMINI_API_KEY = st.secrets.get("GEMINI_API_KEY", "") if "GEMINI_API_KEY" in st.secrets else os.environ.get("GEMINI_API_KEY", "")
+ENABLE_AI_FALLBACK = True
+
+# Configurações de categorização
+FUZZY_MATCH_THRESHOLD = 80  # pontuação mínima para correspondência fuzzy (0-100)
+
+# Importa o código completo da aplicação
+from src.utils.text_utils import *
+from src.extractors.base_extractor import BaseExtractor
+from src.extractors.generic_extractor import GenericExtractor
+from src.categorizers.base_categorizer import BaseCategorizer
+from src.categorizers.rule_based_categorizer import RuleBasedCategorizer
+from src.categorizers.fuzzy_categorizer import FuzzyCategorizer
+from src.categorizers.ai_categorizer import AICategorizer
+from src.categorizers.chain_categorizer import ChainCategorizer
+
+# Importa o código da função main do arquivo main.py
 from src.main import main
 
 # Executa a aplicação

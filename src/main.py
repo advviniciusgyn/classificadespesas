@@ -11,10 +11,14 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import io
 
-from extractors.generic_extractor import GenericExtractor
-from categorizers.chain_categorizer import ChainCategorizer
-from utils.text_utils import normalize_text
-from config import (
+# Importações absolutas para evitar problemas com importações relativas
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+from src.extractors.generic_extractor import GenericExtractor
+from src.categorizers.chain_categorizer import ChainCategorizer
+from src.utils.text_utils import normalize_text
+from src.config import (
     STREAMLIT_PAGE_TITLE, 
     STREAMLIT_PAGE_ICON,
     GEMINI_API_KEY,

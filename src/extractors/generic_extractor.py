@@ -9,7 +9,12 @@ import logging
 from datetime import datetime
 
 from .base_extractor import BaseExtractor
-from ..utils.text_utils import normalize_text
+
+# Importação absoluta para evitar problemas com importações relativas
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+from src.utils.text_utils import normalize_text
 
 logger = logging.getLogger(__name__)
 
