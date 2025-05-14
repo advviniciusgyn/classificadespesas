@@ -39,9 +39,8 @@ import json
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Configurações da API do Google Gemini
-GEMINI_API_KEY = st.secrets.get("GEMINI_API_KEY", "") if "GEMINI_API_KEY" in st.secrets else os.environ.get("GEMINI_API_KEY", "")
-ENABLE_AI_FALLBACK = True
+# As configurações da API do Google Gemini estão no arquivo config.py
+# A chave da API deve ser configurada nos segredos do Streamlit Cloud
 
 # Configurações de categorização
 FUZZY_MATCH_THRESHOLD = 80  # pontuação mínima para correspondência fuzzy (0-100)
