@@ -80,8 +80,8 @@ def main():
         Desenvolvido com Python, pandas e Streamlit.
         """)
     
-    # Abas principais
-    tab1, tab2, tab3 = st.tabs(["Processar PDFs", "Gerenciar Categorias", "Visualizar Resultados"])
+    # Abas para diferentes funcionalidades
+    tab1, tab2, tab3 = st.tabs(["Processar PDFs", "Visualizar Resultados", "Cadastrar Categorias"])
     
     # Aba 1: Processar PDFs
     with tab1:
@@ -213,26 +213,94 @@ def main():
                 
                 # Adicionar nova categoria
                 st.subheader("Adicionar nova categoria")
-                col1, col2 = st.columns(2)
-                with col1:
-                    new_pattern = st.text_input("Padrão de descrição")
-                with col2:
-                    new_category = st.text_input("Categoria")
                 
-                if st.button("Adicionar", disabled=not (new_pattern and new_category)):
-                    if new_pattern and new_category:
-                        # Adiciona a nova categoria ao DataFrame
-                        new_row = pd.DataFrame({'pattern': [new_pattern], 'category': [new_category]})
-                        categories_df = pd.concat([categories_df, new_row], ignore_index=True)
-                        
-                        # Salva o DataFrame atualizado
-                        st.session_state.categories_df = categories_df
-                        
-                        # Exibe mensagem de sucesso
-                        st.success(f"Categoria '{new_category}' adicionada com sucesso!")
-                        
-                        # Atualiza a exibição
-                        st.experimental_rerun()
+                # Opção 1: Adicionar categoria individual
+                with st.expander("Adicionar categoria individual", expanded=False):
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        new_pattern = st.text_input("Padrão de descrição")
+                    with col2:
+                        new_category = st.text_input("Categoria")
+                    
+                    if st.button("Adicionar categoria", disabled=not (new_pattern and new_category)):
+                        if new_pattern and new_category:
+                            # Adiciona a nova categoria ao DataFrame
+                            new_row = pd.DataFrame({'pattern': [new_pattern], 'category': [new_category]})
+                            categories_df = pd.concat([categories_df, new_row], ignore_index=True)
+                            
+                            # Salva o DataFrame atualizado
+                            st.session_state.categories_df = categories_df
+                            
+                            # Exibe mensagem de sucesso
+                            st.success(f"Categoria '{new_category}' adicionada com sucesso!")
+                            
+                            # Atualiza a exibição
+                            st.experimental_rerun()
+                
+                # Opção 2: Adicionar múltiplas categorias de uma vez
+                with st.expander("Adicionar múltiplas categorias", expanded=True):
+                    st.markdown("""
+                    ### Cole sua lista de categorias aqui
+                    
+                    Cada linha deve seguir o formato: `padrão de descrição | categoria`
+                    
+                    **Exemplos:**
+                    ```
+                    supermercado | Alimentação
+                    farmacia | Saúde
+                    *uber* | Transporte
+                    ```
+                    """)
+                    
+                    bulk_categories = st.text_area(
+                        "Lista de categorias", 
+                        height=200,
+                        help="Cole sua lista de categorias no formato 'padrão | categoria', uma por linha."
+                    )
+                    
+                    if st.button("Processar lista de categorias", disabled=not bulk_categories):
+                        if bulk_categories:
+                            # Processa as linhas
+                            lines = bulk_categories.strip().split('\n')
+                            new_categories = []
+                            invalid_lines = []
+                            
+                            for i, line in enumerate(lines):
+                                if '|' in line:
+                                    parts = [part.strip() for part in line.split('|', 1)]
+                                    if len(parts) == 2 and parts[0] and parts[1]:
+                                        new_categories.append({'pattern': parts[0], 'category': parts[1]})
+                                    else:
+                                        invalid_lines.append((i+1, line))
+                                else:
+                                    invalid_lines.append((i+1, line))
+                            
+                            if new_categories:
+                                # Adiciona as novas categorias ao DataFrame
+                                new_rows = pd.DataFrame(new_categories)
+                                categories_df = pd.concat([categories_df, new_rows], ignore_index=True)
+                                
+                                # Salva o DataFrame atualizado
+                                st.session_state.categories_df = categories_df
+                                
+                                # Exibe mensagem de sucesso
+                                st.success(f"{len(new_categories)} categorias adicionadas com sucesso!")
+                                
+                                # Exibe as novas categorias adicionadas
+                                st.subheader("Categorias adicionadas:")
+                                st.dataframe(new_rows)
+                            
+                            if invalid_lines:
+                                # Exibe mensagem de erro para linhas inválidas
+                                st.error(f"{len(invalid_lines)} linhas inválidas encontradas.")
+                                st.markdown("**Linhas inválidas:**")
+                                for line_num, line in invalid_lines:
+                                    st.markdown(f"- Linha {line_num}: `{line}`")
+                                st.markdown("Certifique-se de que cada linha esteja no formato `padrão | categoria`.")
+                            
+                            if new_categories and not invalid_lines:
+                                # Atualiza a exibição se todas as linhas foram processadas com sucesso
+                                st.experimental_rerun()
                 
                 # Opção para download do arquivo de categorias atualizado
                 if st.button("Baixar arquivo de categorias atualizado"):
